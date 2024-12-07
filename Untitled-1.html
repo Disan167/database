@@ -1,0 +1,53 @@
+<div class="budget-overview">
+    <?php
+    // Fetch the budgets from the database
+    $result = $conn->query("SELECT * FROM budgets");
+    while ($row = $result->fetch_assoc()) {
+        $category = $row['category'];
+        $amount = $row['amount'];
+        // Here you would calculate the progress based on expenses made.
+        // For now, I'll just use a placeholder percentage.
+        $progress = 50; // Placeholder for progress calculation logic
+        echo "
+        <div class='budget-item'>
+            <h4>$category</h4>
+            <p>Budget: $$amount</p>
+            <div class='progress-bar'>
+                <div class='progress-bar-inner' style='width: $progress%;'></div>
+            </div>
+        </div>";
+    }
+    ?>
+</div>
+
+
+<?php
+// Fetch the total expenses in a specific category
+$category = $row['category']; // This will be either 'Food', 'Entertainment', etc.
+$expensesResult = $conn->query("SELECT SUM(amount) AS total_expenses FROM expenses WHERE category = '$category'");
+$expensesRow = $expensesResult->fetch_assoc();
+$totalExpenses = $expensesRow['total_expenses'];
+
+// Calculate the progress percentage
+$progress = ($totalExpenses / $amount) * 100;
+$progress = min($progress, 100); // Ensure progress doesn't exceed 100%
+
+echo "
+<div class='budget-item'>
+    <h4>$category</h4>
+    <p>Budget: $$amount</p>
+    <div class='progress-bar'>
+        <div class='progress-bar-inner' style='width: $progress%;'></div>
+    </div>
+</div>";
+?>
+
+4. Updating the Progress Bar Based on Expenses
+To calculate the progress bar dynamically, you would need to:
+
+Calculate the total expenses in each category.
+Compare it with the budget amount to determine the percentage.
+For example, you can write a query to get the total expenses in each category and then calculate the percentage for the progress bar:
+
+This code assumes that you have an expenses table where expenses are stored, and you can group them by category to get the total expenses in each category.
+If you don't have an expenses table yet, this would need to be set up first

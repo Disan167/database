@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Finances Tracker - Budget</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        /* General Body Styles */
+        body, html {
+            margin: 0;
+            height: 100%;
+            font-family: 'Roboto', sans-serif;
+            background-color: #000000;
+            color: #f1f1f1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            background-color: #2d2d2d;
+            width: 250px;
+            height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+            position: fixed;
+            left: 0;
+            top: 0;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .sidebar.active {
+            transform: translateX(0);
+        }
+
+        .sidebar h2 {
+            color: #ff8c00;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin: 15px 0;
+        }
+
+        .sidebar ul li a {
+            color: #f1f1f1;
+            text-decoration: none;
+            font-size: 1.1rem;
+            display: block;
+            transition: color 0.3s ease;
+        }
+
+        .sidebar ul li a:hover {
+            color: #ff8c00;
+        }
+
+        .logout {
+            margin-top: 30px;
+            display: block;
+            color: #ff8c00;
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+
+        .logout:hover {
+            color: #e77f00;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 0;
+            padding: 20px;
+            flex-grow: 1;
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        .main-content .toggle-btn {
+            background-color: #ff8c00;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .main-content .toggle-btn:hover {
+            background-color: #e77f00;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        .logo img {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+        }
+
+        .logo h1 {
+            color: #ff8c00;
+            font-size: 1.8rem;
+            margin: 0;
+        }
+
+        /* Budget Form */
+        .budget-form {
+            background-color: #2d2d2d;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+            margin-bottom: 20px;
+        }
+
+        .budget-form h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .budget-form input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #444;
+            border: 1px solid #555;
+            border-radius: 8px;
+            color: #f1f1f1;
+        }
+
+        .budget-form button {
+            background-color: #ff8c00;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .budget-form button:hover {
+            background-color: #e77f00;
+        }
+
+        /* Budget Overview */
+        .budget-overview {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .budget-item {
+            background-color: #2d2d2d;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .budget-item h4 {
+            margin-bottom: 10px;
+        }
+
+        .budget-item .progress-bar {
+            height: 10px;
+            background-color: #444;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .progress-bar-inner {
+            height: 100%;
+            background-color: #ff8c00;
+            width: 0%; /* This will be dynamically updated */
+            border-radius: 5px;
+        }
+
+        footer {
+            background-color: #2d2d2d;
+            color: #a1a1a1;
+            text-align: center;
+            padding: 10px;
+            font-size: 0.9rem;
+            width: 100%;
+            margin-top: auto; /* Ensures footer stays at the bottom */
+        }
+
+        /* Responsive Design */
+        @media (min-width: 768px) {
+            .main-content {
+                margin-left: 250px;
+            }
+
+            .sidebar {
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <h2>Menu</h2>
+        <ul>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="add-expense.html">Add Expense</a></li>
+            <li><a href="budget.html">Budget</a></li>
+            <li><a href="reports.html">Reports</a></li>
+        </ul>
+        <a href="logout.html" class="logout">Logout</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <button class="toggle-btn" onclick="toggleSidebar()">☰ Menu</button>
+
+        <div class="logo">
+            <img src="logo.png" alt="My Finances Tracker Logo">
+            <h1>My Finances Tracker</h1>
+        </div>
+
+        <!-- Budget Form -->
+        <div class="budget-form">
+            <h3>Set a New Budget</h3>
+            <form action="#">
+                <input type="text" placeholder="Enter Category (e.g., Food, Entertainment)" required>
+                <input type="number" placeholder="Enter Amount ($)" required>
+                <button type="submit">Set Budget</button>
+            </form>
+        </div>
+
+        <!-- Budget Overview -->
+        <div class="budget-overview">
+            <div class="budget-item">
+                <h4>Food</h4>
+                <p>Budget: $500</p>
+                <div class="progress-bar">
+                    <div class="progress-bar-inner" style="width: 60%;"></div>
+                </div>
+            </div>
+            <div class="budget-item">
+                <h4>Entertainment</h4>
+                <p>Budget: $300</p>
+                <div class="progress-bar">
+                    <div class="progress-bar-inner" style="width: 40%;"></div>
+                </div>
+            </div>
+            <div class="budget-item">
+                <h4>Tuition</h4>
+                <p>Budget: $1200</p>
+                <div class="progress-bar">
+                    <div class="progress-bar-inner" style="width: 80%;"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        &copy; 2024 My Finances Tracker. All Rights Reserved.
+    </footer>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+    </script>
+
+</body>
+</html>

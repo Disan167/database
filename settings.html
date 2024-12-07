@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Finances Tracker - Settings</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        /* General Body Styles */
+        body {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+            height: 100vh;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            background-color: #2d2d2d;
+            width: 250px;
+            height: 100vh;
+            padding: 30px;
+            box-sizing: border-box;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar.active {
+            transform: translateX(0);
+        }
+
+        .sidebar h2 {
+            color: #ff8c00;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin: 15px 0;
+        }
+
+        .sidebar ul li a {
+            color: #f1f1f1;
+            text-decoration: none;
+            font-size: 1.1rem;
+            display: block;
+            transition: color 0.3s ease;
+        }
+
+        .sidebar ul li a:hover {
+            color: #ff8c00;
+        }
+
+        .sidebar .logout {
+            margin-top: 30px;
+            display: block;
+            color: #ff8c00;
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+
+        .sidebar .logout:hover {
+            color: #e77f00;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            margin-left: 250px;
+            padding: 40px;
+            width: 100%;
+            box-sizing: border-box;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .main-content .toggle-btn {
+            background-color: #ff8c00;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .main-content .toggle-btn:hover {
+            background-color: #e77f00;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .logo img {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+        }
+
+        .logo h1 {
+            color: #ff8c00;
+            font-size: 1.8rem;
+            margin: 0;
+            font-weight: 500;
+        }
+
+        /* Section Title */
+        .section-title {
+            font-size: 1.6rem;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 600;
+            border-bottom: 2px solid #f1f1f1;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+
+        /* Form Styles */
+        .settings-form {
+            background-color: #f9f9f9;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+
+        .settings-form input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            color: #333;
+            font-size: 1rem;
+        }
+
+        .settings-form input:focus {
+            outline: none;
+            border-color: #ff8c00;
+        }
+
+        .settings-form button {
+            background-color: #ff8c00;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .settings-form button:hover {
+            background-color: #e77f00;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #2d2d2d;
+            color: #a1a1a1;
+            text-align: center;
+            padding: 12px;
+            font-size: 0.9rem;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            margin-top: 30px;
+        }
+
+        /* Dark Mode Styles */
+        .dark-mode body {
+            background-color: #121212;
+            color: #f1f1f1;
+        }
+
+        .dark-mode .main-content {
+            background-color: #1f1f1f;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .dark-mode .sidebar {
+            background-color: #2d2d2d;
+        }
+
+        .dark-mode .settings-form {
+            background-color: #333;
+        }
+
+        .dark-mode .settings-form input {
+            background-color: #444;
+            border-color: #555;
+            color: #f1f1f1;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+
+            .sidebar {
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <h2>Menu</h2>
+        <ul>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="add-expense.html">Add Expense</a></li>
+            <li><a href="budget.html">Budget</a></li>
+            <li><a href="reports.html">Reports</a></li>
+        </ul>
+        <a href="logout.html" class="logout">Logout</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <button class="toggle-btn" onclick="toggleSidebar()">☰ Menu</button>
+
+        <div class="logo">
+            <img src="logo.png" alt="My Finances Tracker Logo">
+            <h1>My Finances Tracker</h1>
+        </div>
+
+        <!-- Dark/Light Mode Toggle -->
+        <div style="margin-top: 20px;">
+            <label for="theme-toggle" style="font-size: 1.2rem;">Switch to Dark Mode:</label>
+            <input type="checkbox" id="theme-toggle" onclick="toggleTheme()">
+        </div>
+
+        <!-- Account Settings Section -->
+        <div class="section-title">Account Settings</div>
+        <div class="settings-form">
+            <h3>Update Your Profile</h3>
+            <form action="#">
+                <input type="text" placeholder="Full Name" required>
+                <input type="email" placeholder="Email" required>
+                <button type="submit">Save Changes</button>
+            </form>
+        </div>
+
+        <!-- Security Settings Section -->
+        <div class="section-title">Security Settings</div>
+        <div class="settings-form">
+            <h3>Change Your Password</h3>
+            <form action="#">
+                <input type="password" placeholder="Current Password" required>
+                <input type="password" placeholder="New Password" required>
+                <input type="password" placeholder="Confirm New Password" required>
+                <button type="submit">Update Password</button>
+            </form>
+        </div>
+
+        <!-- Notification Settings Section -->
+        <div class="section-title">Notification Settings</div>
+        <div class="settings-form">
+            <form action="#">
+                <label for="email-notifications">
+                    <input type="checkbox" id="email-notifications" checked>
+                    Email Notifications
+                </label><br>
+                <label for="sms-notifications">
+                    <input type="checkbox" id="sms-notifications">
+                    SMS Notifications
+                </label><br>
+                <button type="submit">Save Preferences</button>
+            </form>
+        </div>
+
+        <footer>
+            &copy; 2024 My Finances Tracker. All Rights Reserved.
+        </footer>
+
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+        }
+    </script>
+
+</body>
+</html>

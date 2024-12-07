@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Finances Tracker - Expense Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        /* General Body Styles */
+        body {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: #000000;
+            color: #f1f1f1;
+            display: flex;
+            flex-direction: column; /* Make the body a column layout */
+            min-height: 100vh; /* Ensure body takes full height */
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            background-color: #2d2d2d;
+            width: 250px;
+            height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+            position: fixed;
+            left: 0;
+            top: 0;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .sidebar.active {
+            transform: translateX(0);
+        }
+
+        .sidebar h2 {
+            color: #ff8c00;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin: 15px 0;
+        }
+
+        .sidebar ul li a {
+            color: #f1f1f1;
+            text-decoration: none;
+            font-size: 1.1rem;
+            display: block;
+            transition: color 0.3s ease;
+        }
+
+        .sidebar ul li a:hover {
+            color: #ff8c00;
+        }
+
+        .logout {
+            margin-top: 30px;
+            display: block;
+            color: #ff8c00;
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+
+        .logout:hover {
+            color: #e77f00;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 0;
+            padding: 20px;
+            flex-grow: 1; /* Allow main content to grow and fill available space */
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        .main-content .toggle-btn {
+            background-color: #ff8c00;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .main-content .toggle-btn:hover {
+            background-color: #e77f00;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .logo img {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+        }
+
+        .logo h1 {
+            color: #ff8c00;
+            font-size: 1.8rem;
+            margin: 0;
+        }
+
+        /* Dashboard and Footer Styles */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .summary,
+        .expense-list,
+        .charts {
+            background-color: #2d2d2d;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        footer {
+            background-color: #2d2d2d;
+            color: #a1a1a1;
+            text-align: center;
+            padding: 10px;
+            font-size: 0.9rem;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+
+
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <h2>Menu</h2>
+        <ul>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="add-expense.html">Add Expense</a></li>
+            <li><a href="budget.html">Budget</a></li>
+            <li><a href="reports.html">Reports</a></li>
+        </ul>
+        <a href="logout.html" class="logout">Logout</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <button class="toggle-btn" onclick="toggleSidebar()">☰ Menu</button>
+        <div class="logo">
+            <img src="logo.png" alt="My Finances Tracker Logo">
+            <h1>My Finances Tracker</h1>
+        </div>
+
+        <div class="dashboard">
+            <!-- Summary Section -->
+            <div class="summary">
+                <h3>Total Expenditure</h3>
+                <p>$1200</p>
+            </div>
+            <div class="expense-list">
+                <h3>Recent Expenses</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Category</th>
+                            <th>Description</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2024-11-20</td>
+                            <td>Food</td>
+                            <td>Lunch</td>
+                            <td>$12</td>
+                        </tr>
+                        <tr>
+                            <td>2024-11-19</td>
+                            <td>Entertainment</td>
+                            <td>Movie</td>
+                            <td>$10</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="charts">
+                <h3>Spending Breakdown</h3>
+                <canvas id="spendingChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        &copy; 2024 My Finances Tracker. All Rights Reserved.
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+
+        // Chart.js Example
+        const ctx = document.getElementById('spendingChart').getContext('2d');
+        const spendingChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Food', 'Entertainment', 'Tuition', 'Others'],
+                datasets: [{
+                    data: [300, 200, 500, 200],
+                    backgroundColor: ['#ff8c00', '#e77f00', '#444', '#555']
+                }]
+            },
+            options: { responsive: true }
+        });
+    </script>
+
+</body>
+</html>
